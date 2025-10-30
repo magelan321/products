@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import styles from "./ActionButtons.module.scss";
+import styles from "./ui/ActionButtons.module.scss";
 import { Heart, HeartCrack, Trash } from "lucide-react";
 import { useModal } from "@/hook/useModal";
 import Modal from "@/widgets/modal/Modal";

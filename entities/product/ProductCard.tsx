@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Product } from "@/types/types";
 import Image from "next/image";
 import styles from './ui/card/ProductCard.module.scss';
-import ActionButtons from "@/features/product-actions/ui/ActionButtons";
-
+import ActionButtons from "@/features/actionButtons/ActionButtons";
 
 type Props = {
   product: Product;
@@ -36,11 +35,15 @@ export default function ProductCard({
         <p className={styles.desc}>{description || "No description"}</p>
         <span className={styles.category}>{product.category}</span>
       </Link>
-      <ActionButtons
-        liked={!!liked}
-        onLike={() => onToggleLike(id)}
-        onDelete={() => onDelete(id)}
-      />
+      <div className={styles.overlayButton}>
+        <ActionButtons
+          liked={!!liked}
+          onLike={() => onToggleLike(id)}
+          onDelete={() => onDelete(id)}
+        />
+      </div>
+    
+
     </div>
   );
 }

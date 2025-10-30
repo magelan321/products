@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";
-
 import Link from "next/link";
 import styles from "./ui/ProductsList.module.scss";
 import { deleteProduct, fetchProductsByFirstLetter, searchProductsByName, setFilter, setPage, setSearch, toggleLike } from "@/store/productsSlice";
@@ -12,8 +11,6 @@ import Pagination from "@/shared/ui/pagination/Pagination";
 export default function ProductsList() {
   const dispatch = useDispatch<AppDispatch>();
   const { items, filter, page, pageSize, status, search } = useSelector((s: RootState) => s.products);
-
-  // Функция для загрузки начальных продуктов
   const loadInitialProducts = () => {
     const letters = ["a", "b", "c"];
     letters.forEach((l) => {
@@ -32,7 +29,7 @@ export default function ProductsList() {
       if (localQuery) {
         dispatch(searchProductsByName(localQuery));
       } else {
-        // Если поиск очищен, загружаем начальные продукты
+  
         loadInitialProducts();
       }
     }, 400);
@@ -49,12 +46,10 @@ export default function ProductsList() {
   const currentPage = Math.min(page, totalPages);
   const start = (currentPage - 1) * pageSize;
   const paged = filtered.slice(start, start + pageSize);
-
-  // Проверка на отсутствие товаров
   const hasNoProducts = total === 0;
   const isSearching = search.length > 0;
 
-  // Функция для очистки поиска
+
   const handleClearSearch = () => {
     setLocalQuery("");
     dispatch(setSearch(""));
@@ -93,7 +88,7 @@ export default function ProductsList() {
       </div>
 
       {status === "loading" ? (
-        <div className={styles.loading}>Loading products...</div>
+        <div className={styles["spinner-block"]}><span className={styles.spinner}></span></div>
       ) : hasNoProducts ? (
         <div className={styles.emptyState}>
           {isSearching ? (

@@ -1,15 +1,11 @@
-import { Product } from "@/entities/product/types/product";
+
+import { DrinkResponse, Product, ProductsState } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export interface ProductsState {
-    items: Product[];
-    status: "idle" | "loading" | "succeeded" | "failed";
-    error?: string;
-    filter: "all" | "favorites";
-    search: string;
-    page: number;
-    pageSize: number;
+
+interface CockailDBResponse {
+    drinks: DrinkResponse[] | null;
 }
 
 const initialState: ProductsState = {
@@ -19,9 +15,10 @@ const initialState: ProductsState = {
     search: "",
     page: 1,
     pageSize: 12,
+    editingProduct: null,
 };
 
-function mapDrinkToProduct(drink: any): Product {
+function mapDrinkToProduct(drink: DrinkResponse): Product {
     return {
         id: drink.idDrink,
         title: drink.strDrink,
@@ -39,7 +36,7 @@ export const fetchProductsByFirstLetter = createAsyncThunk<Product[], string>(
     async (letter: string) => {
         const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${encodeURIComponent(letter)}`;
         const res = await axios.get(url);
-        const drinks: any[] = res.data?.drinks ?? [];
+        const drinks: DrinkResponse[] = res.data?.drinks ?? [];
         return drinks.map(mapDrinkToProduct);
     }
 );
@@ -52,7 +49,7 @@ export const searchProductsByName = createAsyncThunk<Product[], string>(
         }
         const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${encodeURIComponent(query)}`;
         const res = await axios.get(url);
-        const drinks: any[] = res.data?.drinks ?? [];
+        const drinks: DrinkResponse[] = res.data?.drinks ?? [];
         return drinks.map(mapDrinkToProduct);
     }
 );
@@ -62,7 +59,7 @@ export const fetchProductById = createAsyncThunk<Product | undefined, string | n
     async (id) => {
         const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${encodeURIComponent(String(id))}`;
         const res = await axios.get(url);
-        const drinks: any[] = res.data?.drinks ?? [];
+        const drinks: DrinkResponse[] = res.data?.drinks ?? [];
         if (drinks.length > 0) {
             return mapDrinkToProduct(drinks[0]);
         }
@@ -104,6 +101,29 @@ const productsSlice = createSlice({
             const idx = state.items.findIndex((p) => p.id === action.payload.id);
             if (idx !== -1) {
                 state.items[idx] = { ...state.items[idx], ...action.payload };
+            }
+        },
+        startEditing(state, action: PayloadAction<string | number>){
+            const id = action.payload;
+            const product = state.items.find((p) => p.id === id);
+            if(product) {
+                state.editingProduct = { ...product};
+            }
+        },
+        cancelEditing(state){
+            state.editingProduct = null;
+        },
+        saveProduct(state, action: PayloadAction<Omit<Product, 'id'>>){
+            if(state.editingProduct){
+                const updatedProduct: Product = {
+                    ...state.editingProduct,
+                    ...action.payload,
+                };
+                const idx = state.items.findIndex((p) => p.id === state.editingProduct!.id);
+                if(idx !==  -1){
+                    state.items[idx] = updatedProduct;
+                }
+                state.editingProduct = null
             }
         },
         setFilter(state, action: PayloadAction<"all" | "favorites">) {
@@ -178,6 +198,9 @@ export const {
     deleteProduct,
     addProduct,
     updateProduct,
+    startEditing,
+    cancelEditing,
+    saveProduct,
     setFilter,
     setSearch,
     setPage,

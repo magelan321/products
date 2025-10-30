@@ -1,0 +1,114 @@
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.likeBtn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-size: 20px;
+  color: black;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover{
+    color: #ef4444;
+  }
+}
+.likeBtn--active {
+  color: #ef4444;
+}
+
+.likeBtn svg {
+  width: 20px;
+  height: 20px;
+
+}
+
+.deleteBtn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: black;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover{
+    color: gray;
+  }
+}
+
+.deleteBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.modalCancelButton {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #4b5563;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.modalConfirmButton {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.modalDeleteButton {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
